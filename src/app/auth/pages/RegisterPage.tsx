@@ -1,8 +1,17 @@
-import { AuthForm, type AuthFormData } from '../components/AuthForm';
+import api from "@/lib/api";
+import { AuthForm, type AuthFormData } from "../components/AuthForm";
+import { useNavigate } from "react-router";
 
 export const RegisterPage = () => {
-  const handleRegister = (data: AuthFormData) => {
-    console.log('Register with', data);
+  const navigate = useNavigate();
+  const handleRegister = async (data: AuthFormData) => {
+    try {
+      await api.post("/auth/register", data);
+      await api.post("/auth/login", data, { withCredentials: true });
+      navigate("/");
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
 
   return (
